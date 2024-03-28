@@ -171,20 +171,21 @@ class PLSRenderContextGLImpl::PLSImplWebGL : public PLSRenderContextGLImpl::PLSI
         auto renderTarget = static_cast<PLSRenderTargetGL*>(desc.renderTarget);
         renderTarget->allocateInternalPLSTextures(desc.interlockMode);
 
-        auto framebufferRenderTarget = lite_rtti_cast<FramebufferRenderTargetGL*>(renderTarget);
-        if (framebufferRenderTarget != nullptr)
-        {
-            // We're targeting an external FBO directly. Make sure to allocate and attach an
-            // offscreen target texture.
-            framebufferRenderTarget->allocateOffscreenTargetTexture();
-            if (desc.colorLoadAction == LoadAction::preserveRenderTarget)
-            {
-                // Copy the framebuffer's contents to our offscreen texture.
-                framebufferRenderTarget->bindDestinationFramebuffer(GL_READ_FRAMEBUFFER);
-                framebufferRenderTarget->bindInternalFramebuffer(GL_DRAW_FRAMEBUFFER, 1);
-                glutils::BlitFramebuffer(desc.renderTargetUpdateBounds, renderTarget->height());
-            }
-        }
+        // TODO DOPPLE make this an option
+        // auto framebufferRenderTarget = lite_rtti_cast<FramebufferRenderTargetGL*>(renderTarget);
+        // if (framebufferRenderTarget != nullptr)
+        // {
+        //     // We're targeting an external FBO directly. Make sure to allocate and attach an
+        //     // offscreen target texture.
+        //     framebufferRenderTarget->allocateOffscreenTargetTexture();
+        //     if (desc.colorLoadAction == LoadAction::preserveRenderTarget)
+        //     {
+        //         // Copy the framebuffer's contents to our offscreen texture.
+        //         framebufferRenderTarget->bindDestinationFramebuffer(GL_READ_FRAMEBUFFER);
+        //         framebufferRenderTarget->bindInternalFramebuffer(GL_DRAW_FRAMEBUFFER, 1);
+        //         glutils::BlitFramebuffer(desc.renderTargetUpdateBounds, renderTarget->height());
+        //     }
+        // }
 
         // Begin pixel local storage.
         renderTarget->bindHeadlessFramebuffer(plsContextImpl->m_capabilities);
@@ -220,15 +221,16 @@ class PLSRenderContextGLImpl::PLSImplWebGL : public PLSRenderContextGLImpl::PLSI
         static_assert(ORIGINAL_DST_COLOR_PLANE_IDX == 3);
         glEndPixelLocalStorageANGLE(4, kStoreOps);
 
-        if (auto framebufferRenderTarget = lite_rtti_cast<FramebufferRenderTargetGL*>(
-                static_cast<PLSRenderTargetGL*>(desc.renderTarget)))
-        {
-            // We rendered to an offscreen texture. Copy back to the external target FBO.
-            framebufferRenderTarget->bindInternalFramebuffer(GL_READ_FRAMEBUFFER, 1);
-            framebufferRenderTarget->bindDestinationFramebuffer(GL_DRAW_FRAMEBUFFER);
-            glutils::BlitFramebuffer(desc.renderTargetUpdateBounds,
-                                     framebufferRenderTarget->height());
-        }
+        // TODO DOPPLE make this an option
+        // if (auto framebufferRenderTarget = lite_rtti_cast<FramebufferRenderTargetGL*>(
+        //         static_cast<PLSRenderTargetGL*>(desc.renderTarget)))
+        // {
+        //     // We rendered to an offscreen texture. Copy back to the external target FBO.
+        //     framebufferRenderTarget->bindInternalFramebuffer(GL_READ_FRAMEBUFFER, 1);
+        //     framebufferRenderTarget->bindDestinationFramebuffer(GL_DRAW_FRAMEBUFFER);
+        //     glutils::BlitFramebuffer(desc.renderTargetUpdateBounds,
+        //                              framebufferRenderTarget->height());
+        // }
     }
 
     const char* shaderDefineName() const override { return GLSL_PLS_IMPL_WEBGL; }
