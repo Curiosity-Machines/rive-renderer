@@ -296,6 +296,11 @@ void FramebufferRenderTargetGL::bindDestinationFramebuffer(GLenum target)
     glBindFramebuffer(target, m_externalFramebufferID);
 }
 
+GLuint FramebufferRenderTargetGL::getOffscreenTargetTextureID()
+{
+    return m_offscreenTargetTextureID;
+}
+
 void FramebufferRenderTargetGL::allocateOffscreenTargetTexture()
 {
     if (m_offscreenTargetTextureID == 0)

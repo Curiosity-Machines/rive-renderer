@@ -157,6 +157,7 @@ public:
                                           int sampleCount,
                                           const IAABB* preserveBounds) final;
     void bindInternalDstTexture(GLenum activeTexture) final;
+    GLuint getOffscreenTargetTextureID();
 
 private:
     // Ownership of this object is not assumed; the client must delete it when done.
